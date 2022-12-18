@@ -29,7 +29,6 @@ export const TaskArea: FC = (): ReactElement => {
         <Grid item display="flex" flexDirection="column" xs={10} md={8}>
           <Task />
           <Task />
-          <Task />
         </Grid>
       </Grid>
     </Grid>
