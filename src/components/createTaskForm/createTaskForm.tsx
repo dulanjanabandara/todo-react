@@ -8,6 +8,7 @@ import {
   Alert,
   AlertTitle,
 } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 
 import { TaskTitleField } from './_tastTitleField';
 import { TaskDescriptionField } from './_taskDescriptionField';
@@ -15,6 +16,8 @@ import { TaskDateField } from './_taskDateField';
 import { TaskSelectField } from './_taskSelectField';
 import { Status } from './enums/Status';
 import { Priority } from './enums/Priority';
+import { sendApiRequest } from '../../helpers/sendApiRequest';
+import { ICreateTask } from '../taskArea/interfaces/ICreateTask';
 
 export const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
@@ -22,6 +25,26 @@ export const CreateTaskForm: FC = (): ReactElement => {
   const [date, setDate] = useState<Date | null>(new Date());
   const [status, setStatus] = useState<string>(Status.todo);
   const [priority, setPriority] = useState<string>(Priority.normal);
+
+  const createTaskMutation = useMutation((data: ICreateTask) =>
+    sendApiRequest('http://localhost:3200/tasks', 'POST', data),
+  );
+
+  function createTaskHandler() {
+    if (!title || !date || !description) {
+      return;
+    }
+
+    const task: ICreateTask = {
+      title,
+      description,
+      date: date.toString(),
+      status,
+      priority,
+    };
+
+    createTaskMutation.mutate(task);
+  }
 
   return (
     <Box
@@ -83,7 +106,12 @@ export const CreateTaskForm: FC = (): ReactElement => {
           />
         </Stack>
         <LinearProgress />
-        <Button variant="contained" size="large" fullWidth>
+        <Button
+          onClick={createTaskHandler}
+          variant="contained"
+          size="large"
+          fullWidth
+        >
           Create a Task
         </Button>
       </Stack>
