@@ -7,6 +7,7 @@ import { TaskCounter } from '../taskCounter/taskCounter';
 import { Task } from '../task/task';
 import { sendApiRequest } from '../../helpers/sendApiRequest';
 import { ITaskApi } from './interfaces/ITaskApi';
+import { Status } from '../createTaskForm/enums/Status';
 
 export const TaskArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(['tasks'], async () => {
@@ -54,17 +55,22 @@ export const TaskArea: FC = (): ReactElement => {
             ) : (
               Array.isArray(data) &&
               data.length > 0 &&
-              data.map((dataItem, index) => (
-                <Task
-                  key={index + dataItem.priority}
-                  id={dataItem.id}
-                  title={dataItem.title}
-                  date={new Date(dataItem.date)}
-                  description={dataItem.description}
-                  status={dataItem.status}
-                  priority={dataItem.priority}
-                />
-              ))
+              data.map((dataItem, index) => {
+                return dataItem.status === Status.todo ||
+                  dataItem.status === Status.inProgress ? (
+                  <Task
+                    key={index + dataItem.priority}
+                    id={dataItem.id}
+                    title={dataItem.title}
+                    date={new Date(dataItem.date)}
+                    description={dataItem.description}
+                    status={dataItem.status}
+                    priority={dataItem.priority}
+                  />
+                ) : (
+                  false
+                );
+              })
             )}
           </>
         </Grid>
