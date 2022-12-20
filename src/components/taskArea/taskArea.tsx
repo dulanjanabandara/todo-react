@@ -9,6 +9,7 @@ import { sendApiRequest } from '../../helpers/sendApiRequest';
 import { ITaskApi } from './interfaces/ITaskApi';
 import { Status } from '../createTaskForm/enums/Status';
 import { IUpdateTask } from '../createTaskForm/interfaces/IUpdateTask';
+import { countTasks } from './helpers/countTasks';
 
 export const TaskArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(['tasks'], async () => {
@@ -57,9 +58,18 @@ export const TaskArea: FC = (): ReactElement => {
           xs={12}
           mb={8}
         >
-          <TaskCounter />
-          <TaskCounter />
-          <TaskCounter />
+          <TaskCounter
+            status={Status.todo}
+            count={data ? countTasks(data, Status.todo) : undefined}
+          />
+          <TaskCounter
+            status={Status.inProgress}
+            count={data ? countTasks(data, Status.inProgress) : undefined}
+          />
+          <TaskCounter
+            status={Status.completed}
+            count={data ? countTasks(data, Status.completed) : undefined}
+          />
         </Grid>
         <Grid item display="flex" flexDirection="column" xs={10} md={8}>
           <>
