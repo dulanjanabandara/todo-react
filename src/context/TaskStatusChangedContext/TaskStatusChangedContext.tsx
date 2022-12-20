@@ -6,12 +6,12 @@ import React, {
   useState,
 } from 'react';
 
-export const TaskStatusChangeContext = createContext({
+export const TaskStatusChangedContext = createContext({
   updated: false,
   toggle: () => {},
 });
 
-export const TaskStatusChangeContextProvider: FC<PropsWithChildren> = (
+export const TaskStatusChangedContextProvider: FC<PropsWithChildren> = (
   props,
 ): ReactElement => {
   const [updated, setUpdated] = useState(false);
@@ -20,7 +20,11 @@ export const TaskStatusChangeContextProvider: FC<PropsWithChildren> = (
     updated ? setUpdated(false) : setUpdated(true);
   }
 
-  return <TaskStatusChangeContext.Provider value={{updated, toggle: toggleHandler}}>
-    {props.children}
-  </TaskStatusChangeContext.Provider>;
+  return (
+    <TaskStatusChangedContext.Provider
+      value={{ updated, toggle: toggleHandler }}
+    >
+      {props.children}
+    </TaskStatusChangedContext.Provider>
+  );
 };
